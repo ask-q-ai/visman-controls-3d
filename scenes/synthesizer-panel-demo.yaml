@@ -1,0 +1,388 @@
+viewport:
+  width: 960
+  height: 640
+  fit: contain
+  align: center
+
+initial_vm_state:
+  synth:
+    filter: 0.6
+    volume: 0.75
+    reverb: 0.3
+    attack: 0.2
+    release: 0.5
+
+camera:
+  position:
+    x: 0
+    y: 3
+    z: 12
+  target:
+    x: 0
+    y: 0
+    z: 0
+
+lights:
+  - type: ambient
+    intensity: 0.6
+  - type: directional
+    position:
+      x: 5
+      y: 10
+      z: 8
+    intensity: 1.2
+
+objects:
+  - id: scene-root
+    context: canvas
+    type: group
+    render: false
+    children:
+      - id: bg
+        context: canvas
+        type: rectangle
+        position:
+          x: 0
+          y: 0
+        size:
+          width: 960
+          height: 640
+        style:
+          fillStyle: "#0D0D0D"
+
+      - id: title-label
+        context: canvas
+        type: text
+        position:
+          x: 480
+          y: 28
+        anchor: center
+        properties:
+          text: "SYNTHESIZER"
+        style:
+          fillStyle: "#A78BFA"
+          fontSize: 22
+          fontWeight: "bold"
+
+      # Row labels — knobs
+      - id: filter-label
+        context: canvas
+        type: text
+        position:
+          x: 168
+          y: 580
+        anchor: center
+        properties:
+          text: "FILTER"
+        style:
+          fillStyle: "#A78BFA"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: volume-label
+        context: canvas
+        type: text
+        position:
+          x: 480
+          y: 580
+        anchor: center
+        properties:
+          text: "VOLUME"
+        style:
+          fillStyle: "#A78BFA"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: reverb-label
+        context: canvas
+        type: text
+        position:
+          x: 792
+          y: 580
+        anchor: center
+        properties:
+          text: "REVERB"
+        style:
+          fillStyle: "#A78BFA"
+          fontSize: 11
+          fontWeight: "bold"
+
+      # Knob value readouts
+      - id: filter-value
+        context: canvas
+        type: text
+        position:
+          x: 168
+          y: 596
+        anchor: center
+        properties:
+          text: "{{ Math.round(@vm.synth.filter * 100) }}%"
+        style:
+          fillStyle: "#7C3AED"
+          fontSize: 10
+          fontWeight: "bold"
+
+      - id: volume-value
+        context: canvas
+        type: text
+        position:
+          x: 480
+          y: 596
+        anchor: center
+        properties:
+          text: "{{ Math.round(@vm.synth.volume * 100) }}%"
+        style:
+          fillStyle: "#7C3AED"
+          fontSize: 10
+          fontWeight: "bold"
+
+      - id: reverb-value
+        context: canvas
+        type: text
+        position:
+          x: 792
+          y: 596
+        anchor: center
+        properties:
+          text: "{{ Math.round(@vm.synth.reverb * 100) }}%"
+        style:
+          fillStyle: "#7C3AED"
+          fontSize: 10
+          fontWeight: "bold"
+
+      # Slider labels
+      - id: attack-label
+        context: canvas
+        type: text
+        position:
+          x: 130
+          y: 180
+        anchor: center
+        properties:
+          text: "ATTACK"
+        style:
+          fillStyle: "#6EE7B7"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: release-label
+        context: canvas
+        type: text
+        position:
+          x: 130
+          y: 380
+        anchor: center
+        properties:
+          text: "RELEASE"
+        style:
+          fillStyle: "#6EE7B7"
+          fontSize: 11
+          fontWeight: "bold"
+
+      # Slider value readouts
+      - id: attack-value
+        context: canvas
+        type: text
+        position:
+          x: 130
+          y: 195
+        anchor: center
+        properties:
+          text: "{{ Math.round(@vm.synth.attack * 100) }}ms"
+        style:
+          fillStyle: "#059669"
+          fontSize: 10
+          fontWeight: "bold"
+
+      - id: release-value
+        context: canvas
+        type: text
+        position:
+          x: 130
+          y: 395
+        anchor: center
+        properties:
+          text: "{{ Math.round(@vm.synth.release * 100) }}ms"
+        style:
+          fillStyle: "#059669"
+          fontSize: 10
+          fontWeight: "bold"
+
+      # Click zones for knobs
+      - id: filter-click-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 108
+          y: 420
+        size:
+          width: 120
+          height: 120
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "stepFilter"
+        actions:
+          stepFilter:
+            stateMutations:
+              - path: "vm.synth.filter"
+                operation: "set"
+                value: "{{ @vm.synth.filter >= 0.9 ? 0.0 : @vm.synth.filter + 0.1 }}"
+
+      - id: volume-click-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 420
+          y: 420
+        size:
+          width: 120
+          height: 120
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "stepVolume"
+        actions:
+          stepVolume:
+            stateMutations:
+              - path: "vm.synth.volume"
+                operation: "set"
+                value: "{{ @vm.synth.volume >= 0.9 ? 0.0 : @vm.synth.volume + 0.1 }}"
+
+      - id: reverb-click-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 732
+          y: 420
+        size:
+          width: 120
+          height: 120
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "stepReverb"
+        actions:
+          stepReverb:
+            stateMutations:
+              - path: "vm.synth.reverb"
+                operation: "set"
+                value: "{{ @vm.synth.reverb >= 0.9 ? 0.0 : @vm.synth.reverb + 0.1 }}"
+
+      # Drag zones for sliders
+      - id: attack-drag-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 240
+          y: 90
+        size:
+          width: 60
+          height: 220
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "stepAttack"
+        actions:
+          stepAttack:
+            stateMutations:
+              - path: "vm.synth.attack"
+                operation: "set"
+                value: "{{ @vm.synth.attack >= 0.9 ? 0.0 : @vm.synth.attack + 0.1 }}"
+
+      - id: release-drag-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 240
+          y: 330
+        size:
+          width: 60
+          height: 220
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "stepRelease"
+        actions:
+          stepRelease:
+            stateMutations:
+              - path: "vm.synth.release"
+                operation: "set"
+                value: "{{ @vm.synth.release >= 0.9 ? 0.0 : @vm.synth.release + 0.1 }}"
+
+  # Three knobs — FILTER, VOLUME, REVERB
+  - id: knob-filter
+    from:
+      path: ../components/controls-3d.yaml
+      name: knob
+    position:
+      x: -3.2
+      y: -1.2
+      z: 0
+    bindings:
+      value: "{{ @vm.synth.filter }}"
+      knobColor: "#7C3AED"
+
+  - id: knob-volume
+    from:
+      path: ../components/controls-3d.yaml
+      name: knob
+    position:
+      x: 0
+      y: -1.2
+      z: 0
+    bindings:
+      value: "{{ @vm.synth.volume }}"
+      knobColor: "#7C3AED"
+
+  - id: knob-reverb
+    from:
+      path: ../components/controls-3d.yaml
+      name: knob
+    position:
+      x: 3.2
+      y: -1.2
+      z: 0
+    bindings:
+      value: "{{ @vm.synth.reverb }}"
+      knobColor: "#7C3AED"
+
+  # Two sliders — ATTACK, RELEASE (vertical layout, positioned left side)
+  - id: slider-attack
+    from:
+      path: ../components/controls-3d.yaml
+      name: slider_3d
+    position:
+      x: -4.2
+      y: 1.0
+      z: 0
+    rotation:
+      x: 0
+      y: 0
+      z: 1.5708
+    bindings:
+      value: "{{ @vm.synth.attack }}"
+      railColor: "#1E293B"
+      thumbColor: "#34D399"
+
+  - id: slider-release
+    from:
+      path: ../components/controls-3d.yaml
+      name: slider_3d
+    position:
+      x: -4.2
+      y: -0.6
+      z: 0
+    rotation:
+      x: 0
+      y: 0
+      z: 1.5708
+    bindings:
+      value: "{{ @vm.synth.release }}"
+      railColor: "#1E293B"
+      thumbColor: "#34D399"

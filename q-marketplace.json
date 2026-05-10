@@ -1,0 +1,13 @@
+{
+  "version": "2", "kind": "visman", "id": "visman-controls-3d",
+  "name": "VisMan Controls 3D",
+  "description": "Reusable 3D control components — button, slider, knob, and dial — for interactive VisMan panels.",
+  "category": "visman-components", "author": "ask-q-ai",
+  "tags": ["visman", "threejs", "components", "controls", "q-visman-behaviour"],
+  "entry": { "path": "components/controls-3d.yaml", "type": "visman-components" },
+  "sources": [
+    { "path": "components/controls-3d.yaml", "type": "visman-components" },
+    { "path": "scenes/control-panel-demo.yaml", "type": "visman-scene" },
+    { "path": "scenes/synthesizer-panel-demo.yaml", "type": "visman-scene" }
+  ]
+}

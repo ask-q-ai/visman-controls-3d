@@ -1,0 +1,301 @@
+components:
+
+  # ── button_3d ─────────────────────────────────────────────────────────────────
+  # A 3D push-button: a raised box cap sitting on a cylindrical base.
+  # Pressing (onClick) toggles vm state and depresses the cap.
+  # Bindings:
+  #   pressed     boolean — when true the cap is depressed (y offset reduced)
+  #   buttonColor hex color for the cap
+  #   baseColor   hex color for the cylindrical base
+  button_3d:
+    context: threejs
+    type: group
+    children:
+      - id: btn-base
+        context: threejs
+        type: cylinder
+        position:
+          x: 0
+          y: 0
+          z: 0
+        size:
+          radiusTop: 0.5
+          radiusBottom: 0.55
+          height: 0.3
+        rotation:
+          x: 1.5708
+          y: 0
+          z: 0
+        material:
+          color: "{{ baseColor }}"
+          roughness: 0.5
+          metalness: 0.6
+
+      - id: btn-cap
+        context: threejs
+        type: box
+        position:
+          x: 0
+          y: "{{ pressed ? 0.08 : 0.22 }}"
+          z: 0
+        size:
+          width: 0.72
+          height: 0.18
+          depth: 0.72
+        material:
+          color: "{{ buttonColor }}"
+          roughness: 0.3
+          metalness: 0.4
+
+      - id: btn-cap-ring
+        context: threejs
+        type: cylinder
+        position:
+          x: 0
+          y: "{{ pressed ? 0.06 : 0.18 }}"
+          z: 0
+        size:
+          radiusTop: 0.34
+          radiusBottom: 0.34
+          height: 0.04
+        rotation:
+          x: 1.5708
+          y: 0
+          z: 0
+        material:
+          color: "#F8FAFC"
+          roughness: 0.2
+          metalness: 0.8
+
+  # ── slider_3d ─────────────────────────────────────────────────────────────────
+  # A linear slider: a horizontal rail with a sliding thumb that maps a 0–1 value.
+  # Bindings:
+  #   value       0.0–1.0 — controls thumb X position along the rail
+  #   railColor   hex color for the rail body
+  #   thumbColor  hex color for the thumb handle
+  slider_3d:
+    context: threejs
+    type: group
+    children:
+      - id: slider-rail
+        context: threejs
+        type: box
+        position:
+          x: 0
+          y: 0
+          z: 0
+        size:
+          width: 3.0
+          height: 0.18
+          depth: 0.18
+        material:
+          color: "{{ railColor }}"
+          roughness: 0.4
+          metalness: 0.7
+
+      - id: slider-rail-fill
+        context: threejs
+        type: box
+        position:
+          x: "{{ -1.5 + value * 1.5 }}"
+          y: 0
+          z: 0.01
+        size:
+          width: "{{ value * 3.0 }}"
+          height: 0.14
+          depth: 0.14
+        material:
+          color: "{{ thumbColor }}"
+          roughness: 0.3
+          metalness: 0.5
+
+      - id: slider-thumb
+        context: threejs
+        type: box
+        position:
+          x: "{{ -1.5 + value * 3.0 }}"
+          y: 0
+          z: 0
+        size:
+          width: 0.22
+          height: 0.48
+          depth: 0.28
+        material:
+          color: "{{ thumbColor }}"
+          roughness: 0.2
+          metalness: 0.8
+
+      - id: slider-thumb-mark
+        context: threejs
+        type: box
+        position:
+          x: "{{ -1.5 + value * 3.0 }}"
+          y: 0
+          z: 0.15
+        size:
+          width: 0.06
+          height: 0.22
+          depth: 0.04
+        material:
+          color: "#F8FAFC"
+          roughness: 0.1
+          metalness: 0.9
+
+  # ── knob ──────────────────────────────────────────────────────────────────────
+  # A rotary knob: a flat cylinder with a positional indicator notch.
+  # Bindings:
+  #   value       0.0–1.0 — maps to rotation from -2.2 to +2.2 radians
+  #   knobColor   hex color for the knob body
+  knob:
+    context: threejs
+    type: group
+    rotation:
+      x: 0
+      y: "{{ -2.2 + value * 4.4 }}"
+      z: 0
+    children:
+      - id: knob-body
+        context: threejs
+        type: cylinder
+        position:
+          x: 0
+          y: 0
+          z: 0
+        size:
+          radiusTop: 0.5
+          radiusBottom: 0.55
+          height: 0.32
+        rotation:
+          x: 1.5708
+          y: 0
+          z: 0
+        material:
+          color: "{{ knobColor }}"
+          roughness: 0.3
+          metalness: 0.7
+
+      - id: knob-indicator
+        context: threejs
+        type: box
+        position:
+          x: 0
+          y: 0.18
+          z: 0.38
+        size:
+          width: 0.08
+          height: 0.08
+          depth: 0.18
+        material:
+          color: "#F8FAFC"
+          roughness: 0.1
+          metalness: 0.9
+
+      - id: knob-rim
+        context: threejs
+        type: cylinder
+        position:
+          x: 0
+          y: 0
+          z: 0
+        size:
+          radiusTop: 0.56
+          radiusBottom: 0.56
+          height: 0.08
+        rotation:
+          x: 1.5708
+          y: 0
+          z: 0
+        material:
+          color: "#334155"
+          roughness: 0.4
+          metalness: 0.6
+
+  # ── dial ──────────────────────────────────────────────────────────────────────
+  # A large indicator dial with a rotating needle and a backing disc.
+  # Bindings:
+  #   value       0.0–1.0 — drives needle rotation from -2.0 to +2.0 radians
+  #   dialColor   hex color for the backing disc
+  #   needleColor hex color for the needle
+  dial:
+    context: threejs
+    type: group
+    children:
+      - id: dial-backing
+        context: threejs
+        type: cylinder
+        position:
+          x: 0
+          y: 0
+          z: 0
+        size:
+          radiusTop: 0.9
+          radiusBottom: 0.9
+          height: 0.1
+        rotation:
+          x: 1.5708
+          y: 0
+          z: 0
+        material:
+          color: "{{ dialColor }}"
+          roughness: 0.4
+          metalness: 0.5
+
+      - id: dial-ring
+        context: threejs
+        type: cylinder
+        position:
+          x: 0
+          y: 0
+          z: 0
+        size:
+          radiusTop: 0.92
+          radiusBottom: 0.92
+          height: 0.06
+        rotation:
+          x: 1.5708
+          y: 0
+          z: 0
+        material:
+          color: "#1E293B"
+          roughness: 0.5
+          metalness: 0.3
+
+      - id: dial-needle
+        context: threejs
+        type: box
+        position:
+          x: "{{ 0.4 * Math.sin(-2.0 + value * 4.0) }}"
+          y: 0.07
+          z: "{{ 0.4 * Math.cos(-2.0 + value * 4.0) }}"
+        size:
+          width: 0.06
+          height: 0.08
+          depth: 0.72
+        rotation:
+          x: 0
+          y: "{{ -2.0 + value * 4.0 }}"
+          z: 0
+        material:
+          color: "{{ needleColor }}"
+          roughness: 0.1
+          metalness: 0.9
+
+      - id: dial-center
+        context: threejs
+        type: cylinder
+        position:
+          x: 0
+          y: 0.08
+          z: 0
+        size:
+          radiusTop: 0.1
+          radiusBottom: 0.1
+          height: 0.12
+        rotation:
+          x: 1.5708
+          y: 0
+          z: 0
+        material:
+          color: "#94A3B8"
+          roughness: 0.2
+          metalness: 0.9

@@ -1,0 +1,319 @@
+viewport:
+  width: 960
+  height: 640
+  fit: contain
+  align: center
+
+initial_vm_state:
+  controls:
+    button_pressed: false
+    slider_value: 0.4
+    knob_value: 0.5
+    dial_value: 0.3
+
+camera:
+  position:
+    x: 0
+    y: 3
+    z: 10
+  target:
+    x: 0
+    y: 0
+    z: 0
+
+lights:
+  - type: ambient
+    intensity: 0.7
+  - type: directional
+    position:
+      x: 6
+      y: 10
+      z: 8
+    intensity: 1.1
+
+objects:
+  - id: scene-root
+    context: canvas
+    type: group
+    render: false
+    children:
+      - id: bg
+        context: canvas
+        type: rectangle
+        position:
+          x: 0
+          y: 0
+        size:
+          width: 960
+          height: 640
+        style:
+          fillStyle: "#0F172A"
+
+      - id: title-label
+        context: canvas
+        type: text
+        position:
+          x: 480
+          y: 30
+        anchor: center
+        properties:
+          text: "Control Panel Demo"
+        style:
+          fillStyle: "#F1F5F9"
+          fontSize: 20
+          fontWeight: "bold"
+
+      - id: button-label
+        context: canvas
+        type: text
+        position:
+          x: 140
+          y: 560
+        anchor: center
+        properties:
+          text: "BUTTON"
+        style:
+          fillStyle: "#94A3B8"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: button-state-label
+        context: canvas
+        type: text
+        position:
+          x: 140
+          y: 580
+        anchor: center
+        properties:
+          text: "{{ @vm.controls.button_pressed ? 'ON' : 'OFF' }}"
+        style:
+          fillStyle: "{{ @vm.controls.button_pressed ? '#34D399' : '#64748B' }}"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: slider-label
+        context: canvas
+        type: text
+        position:
+          x: 340
+          y: 560
+        anchor: center
+        properties:
+          text: "SLIDER"
+        style:
+          fillStyle: "#94A3B8"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: slider-value-label
+        context: canvas
+        type: text
+        position:
+          x: 340
+          y: 580
+        anchor: center
+        properties:
+          text: "{{ Math.round(@vm.controls.slider_value * 100) }}%"
+        style:
+          fillStyle: "#F59E0B"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: knob-label
+        context: canvas
+        type: text
+        position:
+          x: 570
+          y: 560
+        anchor: center
+        properties:
+          text: "KNOB"
+        style:
+          fillStyle: "#94A3B8"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: knob-value-label
+        context: canvas
+        type: text
+        position:
+          x: 570
+          y: 580
+        anchor: center
+        properties:
+          text: "{{ Math.round(@vm.controls.knob_value * 100) }}%"
+        style:
+          fillStyle: "#818CF8"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: dial-label
+        context: canvas
+        type: text
+        position:
+          x: 800
+          y: 560
+        anchor: center
+        properties:
+          text: "DIAL"
+        style:
+          fillStyle: "#94A3B8"
+          fontSize: 11
+          fontWeight: "bold"
+
+      - id: dial-value-label
+        context: canvas
+        type: text
+        position:
+          x: 800
+          y: 580
+        anchor: center
+        properties:
+          text: "{{ Math.round(@vm.controls.dial_value * 100) }}%"
+        style:
+          fillStyle: "#F472B6"
+          fontSize: 11
+          fontWeight: "bold"
+
+      # Button click area
+      - id: button-click-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 100
+          y: 230
+        size:
+          width: 80
+          height: 80
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "toggleButton"
+        actions:
+          toggleButton:
+            stateMutations:
+              - path: "vm.controls.button_pressed"
+                operation: "set"
+                value: "{{ !@vm.controls.button_pressed }}"
+
+      # Slider drag zone
+      - id: slider-click-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 230
+          y: 290
+        size:
+          width: 220
+          height: 60
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "stepSlider"
+        actions:
+          stepSlider:
+            stateMutations:
+              - path: "vm.controls.slider_value"
+                operation: "set"
+                value: "{{ @vm.controls.slider_value >= 0.9 ? 0.0 : @vm.controls.slider_value + 0.1 }}"
+
+      # Knob click zone
+      - id: knob-click-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 510
+          y: 240
+        size:
+          width: 120
+          height: 120
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "stepKnob"
+        actions:
+          stepKnob:
+            stateMutations:
+              - path: "vm.controls.knob_value"
+                operation: "set"
+                value: "{{ @vm.controls.knob_value >= 0.9 ? 0.0 : @vm.controls.knob_value + 0.1 }}"
+
+      # Dial click zone
+      - id: dial-click-zone
+        context: canvas
+        type: rectangle
+        position:
+          x: 730
+          y: 220
+        size:
+          width: 140
+          height: 140
+        style:
+          fillStyle: "rgba(0,0,0,0)"
+        callbacks:
+          onClick:
+            action: "stepDial"
+        actions:
+          stepDial:
+            stateMutations:
+              - path: "vm.controls.dial_value"
+                operation: "set"
+                value: "{{ @vm.controls.dial_value >= 0.9 ? 0.0 : @vm.controls.dial_value + 0.1 }}"
+
+  # Button 3D
+  - id: panel-button
+    from:
+      path: ../components/controls-3d.yaml
+      name: button_3d
+    position:
+      x: -3.2
+      y: 0
+      z: 0
+    bindings:
+      pressed: "{{ @vm.controls.button_pressed }}"
+      buttonColor: "#34D399"
+      baseColor: "#1E293B"
+
+  # Slider 3D
+  - id: panel-slider
+    from:
+      path: ../components/controls-3d.yaml
+      name: slider_3d
+    position:
+      x: -0.8
+      y: 0
+      z: 0
+    bindings:
+      value: "{{ @vm.controls.slider_value }}"
+      railColor: "#334155"
+      thumbColor: "#F59E0B"
+
+  # Knob 3D
+  - id: panel-knob
+    from:
+      path: ../components/controls-3d.yaml
+      name: knob
+    position:
+      x: 1.8
+      y: 0
+      z: 0
+    bindings:
+      value: "{{ @vm.controls.knob_value }}"
+      knobColor: "#818CF8"
+
+  # Dial 3D
+  - id: panel-dial
+    from:
+      path: ../components/controls-3d.yaml
+      name: dial
+    position:
+      x: 3.6
+      y: 0
+      z: 0
+    bindings:
+      value: "{{ @vm.controls.dial_value }}"
+      dialColor: "#1E293B"
+      needleColor: "#F472B6"
